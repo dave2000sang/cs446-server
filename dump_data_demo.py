@@ -1,4 +1,3 @@
-from flask import Flask, jsonify
 from dotenv import load_dotenv
 import pymongo
 import os
@@ -20,29 +19,23 @@ def init_mongo():
       print("Unable to connect to mongo", e)
   return client
 
-app = Flask(__name__)
-# api = Api(app)
-mongo = init_mongo()
-spellingo_db = mongo.spellingo
-
-
-@app.route("/words")
-def words():
-    # for demo, just return any 10 words
-    words = spellingo_db.words
-    data = list(words.find({}, limit=10))
-    for d in data:
-        del d['_id']
-    return jsonify(results = data)
-# class HelloWorld(Resource):
-#     def get(self):
-#         return {'hello': 'world'}
-
-# class Audio(Resource):
-#     def get(self, word):
-#         return {}
-
-# api.add_resource(HelloWorld, '/')
+def read_data():
+  import csv
+  reader = csv.DictReader(open('demo_data.csv'))
+  data = []
+  for row in reader:
+      del row[None]
+      data.append({k.strip(): v.strip() for k, v in row.items()})
+  return data
 
 if __name__ == '__main__':
-    app.run(debug=True)
+  mongo = init_mongo()
+  spellingo_db = mongo.spellingo
+  words = spellingo_db.words
+  print("words:")
+  for word in words.find({}):
+    print(word)
+
+  data = read_data()
+  result = words.insert_many(data)
+  print(result.inserted_ids)
