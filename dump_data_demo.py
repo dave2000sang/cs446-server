@@ -24,18 +24,16 @@ def read_data():
   reader = csv.DictReader(open('demo_data.csv'))
   data = []
   for row in reader:
-      del row[None]
-      data.append({k.strip(): v.strip() for k, v in row.items()})
+    print(row)
+    data.append({k.strip(): v.strip() for k, v in row.items()})
   return data
 
 if __name__ == '__main__':
   mongo = init_mongo()
   spellingo_db = mongo.spellingo
   words = spellingo_db.words
-  print("words:")
-  for word in words.find({}):
-    print(word)
 
   data = read_data()
+  print(data)
   result = words.insert_many(data)
   print(result.inserted_ids)
