@@ -8,6 +8,12 @@ class HelloWorld(Resource):
     def get(self):
         return {'hello': 'world'}
 
+class Word(Resource):
+    def get(self)
+
+class Audio(Resource):
+    def get(self, word)
+
 api.add_resource(HelloWorld, '/')
 
 if __name__ == '__main__':
