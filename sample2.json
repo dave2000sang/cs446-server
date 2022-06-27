@@ -1,0 +1,121 @@
+{
+	"meta": {
+			"id": "seal:1",
+			"uuid": "e16b93f0-e1ef-4d4f-8762-7a5e99b79810",
+			"sort": "191637000",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": [
+					"seal",
+					"seals",
+					"under seal"
+			],
+			"offensive": false
+	},
+	"hom": 1,
+	"hwi": {
+			"hw": "seal",
+			"prs": [
+					{
+							"mw": "ˈsēl",
+							"sound": {
+									"audio": "seal0001",
+									"ref": "c",
+									"stat": "1"
+							}
+					}
+			]
+	},
+	"fl": "noun",
+	"ins": [
+			{
+					"il": "plural",
+					"if": "seals"
+			},
+			{
+					"il": "also",
+					"if": "seal"
+			}
+	],
+	"def": [
+			{
+					"sseq": [
+							[
+									[
+											"sense",
+											{
+													"sn": "1",
+													"dt": [
+															[
+																	"text",
+																	"{bc}any of numerous carnivorous marine mammals (families Phocidae and Otariidae) that live chiefly in cold regions and have limbs modified into webbed flippers adapted primarily to swimming"
+															]
+													],
+													"sdsense": {
+															"sd": "especially",
+															"dt": [
+																	[
+																			"text",
+																			"{bc}a fur seal or hair seal as opposed to a sea lion"
+																	]
+															]
+													}
+											}
+									]
+							],
+							[
+									[
+											"sense",
+											{
+													"sn": "2 a",
+													"dt": [
+															[
+																	"text",
+																	"{bc}the pelt of a fur seal"
+															]
+													]
+											}
+									],
+									[
+											"sense",
+											{
+													"sn": "b",
+													"dt": [
+															[
+																	"text",
+																	"{bc}leather made from the skin of a seal"
+															]
+													]
+											}
+									]
+							],
+							[
+									[
+											"sense",
+											{
+													"sn": "3",
+													"dt": [
+															[
+																	"text",
+																	"{bc}a dark brown"
+															]
+													]
+											}
+									]
+							]
+					]
+			}
+	],
+	"et": [
+			[
+					"text",
+					"Middle English {it}sele{/it}, from Old English {it}seolh{/it}; akin to Old High German {it}selah{/it} seal"
+			]
+	],
+	"date": "before 12th century{ds||1||}",
+	"shortdef": [
+			"any of numerous carnivorous marine mammals (families Phocidae and Otariidae) that live chiefly in cold regions and have limbs modified into webbed flippers adapted primarily to swimming; especially : a fur seal or hair seal as opposed to a sea lion",
+			"the pelt of a fur seal",
+			"leather made from the skin of a seal"
+	]
+},

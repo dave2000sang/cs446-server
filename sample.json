@@ -1,0 +1,207 @@
+{
+	"meta": {
+		"id": "test:1",
+		"uuid": "0e5228e3-40df-4dce-92e0-36748eb1c24c",
+		"sort": "200122700",
+		"src": "collegiate",
+		"section": "alpha",
+		"stems": [
+			"test",
+			"tests"
+		],
+		"offensive": false
+	},
+	"hom": 1,
+	"hwi": {
+		"hw": "test",
+		"prs": [
+			{
+				"mw": "ˈtest",
+				"sound": {
+					"audio": "test0001",
+					"ref": "c",
+					"stat": "1"
+				}
+			}
+		]
+	},
+	"fl": "noun",
+	"def": [
+		{
+			"sseq": [
+				[
+					[
+						"pseq",
+						[
+							[
+								"bs",
+								{
+									"sense": {
+										"sn": "1 a",
+										"dt": [
+											[
+												"text",
+												"{bc}a means of {a_link|testing}: such as"
+											]
+										]
+									}
+								}
+							],
+							[
+								"sense",
+								{
+									"sn": "(1)",
+									"dt": [
+										[
+											"text",
+											"{bc}something (such as a series of questions or exercises) for measuring the skill, knowledge, intelligence, capacities, or aptitudes of an individual or group"
+										]
+									]
+								}
+							],
+							[
+								"sense",
+								{
+									"sn": "(2)",
+									"dt": [
+										[
+											"text",
+											"{bc}a procedure, reaction, or reagent used to identify or characterize a substance or constituent"
+										]
+									]
+								}
+							]
+						]
+					],
+					[
+						"sense",
+						{
+							"sn": "b",
+							"dt": [
+								[
+									"text",
+									"{bc}a positive result in such a test"
+								]
+							]
+						}
+					]
+				],
+				[
+					[
+						"pseq",
+						[
+							[
+								"sense",
+								{
+									"sn": "2 a (1)",
+									"dt": [
+										[
+											"text",
+											"{bc}a critical examination, observation, or evaluation {bc}{sx|trial||}"
+										]
+									],
+									"sdsense": {
+										"sd": "specifically",
+										"dt": [
+											[
+												"text",
+												"{bc}the procedure of submitting a statement to such conditions or operations as will lead to its proof or disproof or to its acceptance or rejection "
+											],
+											[
+												"vis",
+												[
+													{
+														"t": "a {wi}test{/wi} of a statistical hypothesis"
+													}
+												]
+											]
+										]
+									}
+								}
+							],
+							[
+								"sense",
+								{
+									"sn": "(2)",
+									"dt": [
+										[
+											"text",
+											"{bc}a basis for evaluation {bc}{sx|criterion||}"
+										]
+									]
+								}
+							]
+						]
+					],
+					[
+						"sense",
+						{
+							"sn": "b",
+							"dt": [
+								[
+									"text",
+									"{bc}an ordeal or oath required as proof of conformity with a set of beliefs"
+								]
+							]
+						}
+					],
+					[
+						"sense",
+						{
+							"sn": "c",
+							"sls": [
+								"chiefly British"
+							],
+							"dt": [
+								[
+									"text",
+									"{bc}{sx|cupel||}"
+								]
+							]
+						}
+					]
+				],
+				[
+					[
+						"sense",
+						{
+							"sn": "3",
+							"dt": [
+								[
+									"text",
+									"{bc}a result or value determined by testing"
+								]
+							]
+						}
+					]
+				],
+				[
+					[
+						"sense",
+						{
+							"sn": "4",
+							"dt": [
+								[
+									"text",
+									"{bc}{sx|test match||}"
+								]
+							]
+						}
+					]
+				]
+			]
+		}
+	],
+	"et": [
+		[
+			"text",
+			"Middle English, vessel in which metals were assayed, potsherd, from Anglo-French {it}test, tees{/it} pot, Latin {it}testum{/it} earthen vessel; akin to Latin {it}testa{/it} earthen pot, shell"
+		]
+	],
+	"date": "14th century{ds||2|c|}",
+	"shortdef": [
+		"a means of testing: such as",
+		"something (such as a series of questions or exercises) for measuring the skill, knowledge, intelligence, capacities, or aptitudes of an individual or group",
+		"a procedure, reaction, or reagent used to identify or characterize a substance or constituent"
+	]
+},
