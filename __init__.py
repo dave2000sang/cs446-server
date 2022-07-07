@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 import pymongo
 import os
@@ -28,21 +28,27 @@ spellingo_db = mongo.spellingo
 
 @app.route("/words")
 def words():
-    # for demo, just return any 10 words
-    words = spellingo_db.words
-    data = list(words.find({}, limit=10))
-    for d in data:
-        del d['_id']
-    return jsonify(results = data)
-# class HelloWorld(Resource):
-#     def get(self):
-#         return {'hello': 'world'}
-
-# class Audio(Resource):
-#     def get(self, word):
-#         return {}
-
-# api.add_resource(HelloWorld, '/')
+  limit = request.args.get('limit')
+  if not limit:
+    limit = 10
+  else:
+    limit = int(limit)
+  locale = request.args.get('locale')
+  if not locale:
+    locale = 'us'
+  # for demo, just return any 10 words
+  if locale == 'us':
+    words = spellingo_db.words_us
+  else:
+    words = spellingo_db.words_uk
+  cursor = words.aggregate([{ "$sample": { "size": limit } } ])
+  data = []
+  for d in cursor:
+    data.append(d)
+  # data = list(words.find({}, limit=limit))
+  for d in data:
+    del d['_id']
+  return jsonify(results = data)
 
 if __name__ == '__main__':
     app.run(debug=True)

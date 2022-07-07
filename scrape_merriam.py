@@ -77,7 +77,11 @@ def fetch_word(word):
     except KeyError:
         origin = ""
     if origin:
-        origin = origin.replace("{it}", "").replace("{/it}", "")
+        i = origin.find("{it}")
+        if i >= 0:
+            origin = origin[:i]
+    if not origin:
+        print("WARNING no origin for word", word)
     try:
         partofspeech = response_data['fl']
     except KeyError:
@@ -96,6 +100,8 @@ def fetch_word(word):
         i = usage.find("{wi}")
         j = usage.find("{/wi}")
         usage = usage[:i] + "["+word+"]" + usage[j+5:]
+    else:
+        print("WARNING no usage for word", word)
 
     parsed.append({
         "word": word,
@@ -110,9 +116,11 @@ def fetch_word(word):
 if __name__ == '__main__':
     # Fetch data from API
     words_lst = [
-        'adjust', 'alive', 'undertake', 'end', 'gossip', 'seal', 'penetrate', 'sheesh'
+        'adjust', 'alive', 'understand', 'end', 'conglomerate', 'multitude', 
+        'sufficient', 'solemn', 'incident', 'usual'
     ]
     data = [fetch_word(word) for word in words_lst]
+    print(data[-1])
     # send to mongo
     mongo = init_mongo()
     words = mongo.spellingo.words
