@@ -13,6 +13,8 @@ GET /words
 
 ## Useful scripts
 To ingest new words into mongodb:
-1. Add oxford API credentials to `.env`
-2. `python scrape_oxford.py`
-3. `python upload_words.py`
+
+## How to Scrape words
+1. Create a `.env` file in directory of cs446-server/ containing mongodb and oxford API credentials
+2. `python scrape_oxford.py` - this randomly samples `words.txt` and appends words to `parsed_words_us.txt` and `parsed_words_uk.txt`
+3. `python upload_words.py` - this ingests the words from `parsed_words_us.txt` and `parsed_words_uk.txt` into mongodb

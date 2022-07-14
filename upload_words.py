@@ -1,11 +1,6 @@
-import requests
-import json
 from dotenv import load_dotenv
 import pymongo
 import os
-import random
-import sys
-from time import sleep
 
 
 load_dotenv()
