@@ -24,7 +24,7 @@ app = Flask(__name__)
 # api = Api(app)
 mongo = init_mongo()
 spellingo_db = mongo.spellingo
-
+categories_db = mongo.categories
 
 @app.route("/words")
 def words():
@@ -36,19 +36,33 @@ def words():
   locale = request.args.get('locale')
   if not locale:
     locale = 'us'
-  # for demo, just return any 10 words
-  if locale == 'us':
-    words = spellingo_db.words_us
+  category = request.args.get('category')
+  if not category:
+    category = 'standard'
+  if category == 'standard':
+    if locale == 'us':
+      words = spellingo_db.words_us
+    else:
+      words = spellingo_db.words_uk
   else:
-    words = spellingo_db.words_uk
+    # return categories
+    if category in categories_db.list_collection_names():
+      words = categories_db[category]
+    else:
+      return "Bad category", 400
   cursor = words.aggregate([{ "$sample": { "size": limit } } ])
   data = []
   for d in cursor:
     data.append(d)
-  # data = list(words.find({}, limit=limit))
   for d in data:
     del d['_id']
   return jsonify(results = data)
 
+
+@app.route("/categories")
+def categories():
+  data = [c['category'] for c in categories_db.categories_list.find({})]
+  return jsonify(results = data)
+  
 if __name__ == '__main__':
     app.run(debug=True)
