@@ -10,9 +10,9 @@ mongo = init_mongo()
 
 
 def ingest_into_mongo():
-    data = []
     categories_dir = os.path.join(os.getcwd(), 'parsed_categories')
     for category_file in os.listdir(categories_dir):
+        data = []
         category = category_file.split(".txt")[0]
         print("ingesting:", category)
         with open(os.path.join(categories_dir, f"{category}.txt"), "r", encoding='utf-8') as f:

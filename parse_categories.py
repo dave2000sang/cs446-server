@@ -16,6 +16,7 @@ OXFORD_APP_ID = os.getenv('OXFORD_APP_ID')
 OXFORD_SECRET = os.getenv('OXFORD_SECRET')
 TARGET_NUM_WORDS = 100
 
+CATEGORIES_TO_SKIP = ['astronomy', 'law', 'medicine']
 
 # :param language <str> en-us or en-gb
 def fetch_word(word, language='en-us'):
@@ -73,6 +74,8 @@ if __name__ == '__main__':
     categories_dir = os.path.join(os.getcwd(), 'categories')
     for category_file in os.listdir(categories_dir):
         category = category_file.split(".txt")[0]
+        if category in CATEGORIES_TO_SKIP:
+            continue
         print('Parsing category:', category)
         words_all = []
         with open(os.path.join(categories_dir, category_file), 'r') as f:
@@ -98,5 +101,5 @@ if __name__ == '__main__':
                     with open(f'parsed_categories/{category}.txt', 'a', encoding="utf-8") as f:
                         f.write("%s\n" % data)
                     words_lst.append(data)
-            if len(words_lst) == TARGET_NUM_WORDS:
+            if len(words_lst) >= TARGET_NUM_WORDS:
                 break
