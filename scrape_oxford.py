@@ -6,6 +6,7 @@ import os
 import random
 import sys
 from time import sleep
+from utils import init_mongo, get_word_difficulty
 
 
 load_dotenv()
@@ -65,7 +66,8 @@ def fetch_word(word, language='en-us'):
             "part": data_first['lexicalCategory']['id'],
             "audio": pronunciation['audioFile'],
             "phoneticNotation": pronunciation['phoneticNotation'],
-            "phoneticSpelling": pronunciation['phoneticSpelling']
+            "phoneticSpelling": pronunciation['phoneticSpelling'],
+            "difficulty": get_word_difficulty(word)
         }
     except Exception as e:
         _, _, exc_tb = sys.exc_info()

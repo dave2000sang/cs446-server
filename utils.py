@@ -18,3 +18,16 @@ def init_mongo():
   except Exception as e:
       print("Unable to connect to mongo", e)
   return client
+
+def get_word_difficulty(word):
+  """
+  Get difficulty for this word
+  :param word: str
+  :returns str of 'easy', 'medium', or 'hard'
+  """
+  if len(word) <= 4:
+    return 'easy'
+  elif len(word) <= 7:
+    return 'medium'
+  else:
+    return 'hard'

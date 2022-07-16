@@ -3,7 +3,7 @@ Server for CS446 project
 
 ## Run flask server
 ```
-export FLASK_APP=__init__.py
+export FLASK_APP=app.py
 flask run
 ```
 ## API
