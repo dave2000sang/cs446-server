@@ -1,4 +1,3 @@
-from turtle import update
 from flask import Flask, jsonify, request
 from datetime import datetime
 from utils import init_mongo
@@ -20,8 +19,8 @@ def update_word_of_day(old_word_of_day):
     words = spellingo_db.words_us.aggregate([
       {"$sample": { "size": 1 } } 
     ])
-    new_word = words.next()['word']
-    if new_word != us_word:
+    new_word = words.next()
+    if new_word['word'] != us_word:
       break
   us_word = new_word
   # UK
@@ -29,8 +28,8 @@ def update_word_of_day(old_word_of_day):
     words = spellingo_db.words_uk.aggregate([
       {"$sample": { "size": 1 } } 
     ])
-    new_word = words.next()['word']
-    if new_word != uk_word:
+    new_word = words.next()
+    if new_word['word'] != uk_word:
       break
   uk_word = new_word
   return {
@@ -100,8 +99,10 @@ def word_of_the_day():
     r = mongo.spellingo.word_of_day.update_one({}, {'$set': updated_word_of_day}, upsert=False)
     print("updated word of day. result=", r)
   if locale == 'us':
+    del word_of_day_entry['us_word']['_id']
     return jsonify(results = word_of_day_entry['us_word'])
   else:
+    del word_of_day_entry['uk_word']['_id']
     return jsonify(results = word_of_day_entry['uk_word'])
 
 
