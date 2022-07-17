@@ -3,38 +3,41 @@ from flask import Flask, jsonify, request
 from datetime import datetime
 from utils import init_mongo
 
-# Store the word of the day in global variable that's updated at midnight
-US_word_of_day = None
-UK_word_of_day = None
-word_of_day_date = datetime.min.date()   # date associated w/ word of the day
-
 app = Flask(__name__)
 # api = Api(app)
 mongo = init_mongo()
 spellingo_db = mongo.spellingo
 categories_db = mongo.categories
 
-def update_word_of_day():
-  global US_word_of_day, UK_word_of_day, word_of_day_date
+date_fmt = '%Y-%m-%d'
+default_word_of_day = {'us_word': '', 'uk_word': '', 'date': datetime.min.date().strftime(date_fmt)}
+
+def update_word_of_day(old_word_of_day):
+  us_word = old_word_of_day['us_word']
+  uk_word = old_word_of_day['uk_word']
   # US
   while True:
     words = spellingo_db.words_us.aggregate([
       {"$sample": { "size": 1 } } 
     ])
     new_word = words.next()['word']
-    if new_word != US_word_of_day:
+    if new_word != us_word:
       break
-  US_word_of_day = new_word
+  us_word = new_word
   # UK
   while True:
     words = spellingo_db.words_uk.aggregate([
       {"$sample": { "size": 1 } } 
     ])
     new_word = words.next()['word']
-    if new_word != US_word_of_day:
+    if new_word != uk_word:
       break
-  UK_word_of_day = new_word
-  word_of_day_date = datetime.today().date()
+  uk_word = new_word
+  return {
+      'us_word': us_word,
+      'uk_word': uk_word,
+      'date': datetime.today().date().strftime(date_fmt),
+    }
 
 @app.route("/words")
 def words():
@@ -50,23 +53,31 @@ def words():
   if not category:
     category = 'standard'
   difficulty = request.args.get('difficulty')
-  if not difficulty:
-    difficulty = 'medium'
   if category == 'standard':
     if locale == 'us':
       words = spellingo_db.words_us
     else:
       words = spellingo_db.words_uk
+    if difficulty:
+      cursor = words.aggregate([
+        {"$match": { "difficulty": difficulty }},
+        {"$sample": { "size": limit } } 
+      ])
+    else:
+      cursor = words.aggregate([
+        {"$sample": { "size": limit } } 
+      ])
+
   else:
     # return categories
     if category in categories_db.list_collection_names():
       words = categories_db[category]
     else:
       return "Bad category", 400
-  cursor = words.aggregate([
-    {"$match": { "difficulty": difficulty }},
-    {"$sample": { "size": limit } } 
-  ])
+    # don't filter difficulty if category specified
+    cursor = words.aggregate([
+      {"$sample": { "size": limit } } 
+    ])
   data = []
   for d in cursor:
     data.append(d)
@@ -79,13 +90,19 @@ def word_of_the_day():
   locale = request.args.get('locale')
   if not locale:
     locale = 'us'
+  if len(list(mongo.spellingo.word_of_day.find({}))) == 0:
+    mongo.spellingo.word_of_day.insert_one(default_word_of_day)
+  word_of_day_entry = list(mongo.spellingo.word_of_day.find({}))[0]
+  old_date = datetime.strptime(word_of_day_entry['date'], date_fmt)
   # see if need to update the word
-  if datetime.today().date() > word_of_day_date:
-    update_word_of_day()
+  if datetime.today().date() > old_date.date():
+    updated_word_of_day = update_word_of_day(word_of_day_entry)
+    r = mongo.spellingo.word_of_day.update_one({}, {'$set': updated_word_of_day}, upsert=False)
+    print("updated word of day. result=", r)
   if locale == 'us':
-    return jsonify(results = US_word_of_day)
+    return jsonify(results = word_of_day_entry['us_word'])
   else:
-    return jsonify(results = UK_word_of_day)
+    return jsonify(results = word_of_day_entry['uk_word'])
 
 
 @app.route("/categories")
