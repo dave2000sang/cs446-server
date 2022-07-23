@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 import pymongo
 import os
-from time import sleep
+from wordfreq import zipf_frequency
+from math import log
 
 load_dotenv()
 MONGO_PW = os.getenv('MONGO_PW')
@@ -22,12 +23,17 @@ def init_mongo():
 def get_word_difficulty(word):
   """
   Get difficulty for this word
+  Define word difficulty as a combination of its frequency and length
   :param word: str
-  :returns str of 'easy', 'medium', or 'hard'
+  :returns str of 'easy', 'medium', or 'hard', None is returned for trivial words and should be dropped
   """
-  if len(word) <= 4:
+  freq = zipf_frequency(word, 'en', 'best') # this returns in range [0, 8] higher = more frequent
+  difficulty = 8 - freq + log(len(word))
+  if difficulty <= 2:
+    return None
+  elif difficulty <= 4:
     return 'easy'
-  elif len(word) <= 7:
+  elif difficulty <= 7:
     return 'medium'
   else:
     return 'hard'

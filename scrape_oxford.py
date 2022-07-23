@@ -1,32 +1,18 @@
 import requests
-import json
 from dotenv import load_dotenv
-import pymongo
 import os
 import random
 import sys
-from time import sleep
-from utils import init_mongo, get_word_difficulty
-
+from time import sleep, time
+from utils import get_word_difficulty
 
 load_dotenv()
-MONGO_PW = os.getenv('MONGO_PW')
-MONGO_USER = os.getenv('MONGO_USER')
 OXFORD_APP_ID = os.getenv('OXFORD_APP_ID')
 OXFORD_SECRET = os.getenv('OXFORD_SECRET')
 
-def init_mongo():
-  # Replace the uri string with your MongoDB deployment's connection string.
-  conn_str = f"mongodb+srv://{MONGO_USER}:{MONGO_PW}@spellingocluster.9o6km.mongodb.net/?retryWrites=true&w=majority"
-  print(conn_str)
-  client = pymongo.MongoClient(conn_str, serverSelectionTimeoutMS=3000)
-  try:
-    client.server_info()
-    print("Connected to mongo")
-  except Exception as e:
-      print("Unable to connect to mongo", e)
-  return client
-
+TIMEOUT_AFTER_SECONDS = 1000
+WORD_FILE = 'hard_words.txt' #'words.txt'
+NUM_WORDS = 500
 
 # :param language <str> en-us or en-gb
 def fetch_word(word, language='en-us'):
@@ -41,7 +27,7 @@ def fetch_word(word, language='en-us'):
         if r.status_code == 429:
             # HTTP 429 Too many requests
             print("API throttled...")
-            sleep(5)
+            sleep(8)
             return None
         response_data = r.json()
         # print(response_data)
@@ -58,6 +44,10 @@ def fetch_word(word, language='en-us'):
         usage = " ".join(usage_lst)
 
         pronunciation = [d for d in data['pronunciations'] if 'audioFile' in d][0]
+        difficulty = get_word_difficulty(word)
+        if not difficulty:
+            print(f'skipping {word} too trivial')
+            return None
         return {
             "word": word,
             "definition": def_and_example['definitions'][0],
@@ -67,7 +57,7 @@ def fetch_word(word, language='en-us'):
             "audio": pronunciation['audioFile'],
             "phoneticNotation": pronunciation['phoneticNotation'],
             "phoneticSpelling": pronunciation['phoneticSpelling'],
-            "difficulty": get_word_difficulty(word)
+            "difficulty": difficulty
         }
     except Exception as e:
         _, _, exc_tb = sys.exc_info()
@@ -76,15 +66,19 @@ def fetch_word(word, language='en-us'):
 
 if __name__ == '__main__':
     words_all = []
-    with open("words.txt", "r") as f:
+    with open(WORD_FILE, "r") as f:
         for line in f:
             words_all.append(str(line.strip()))
     N = len(words_all)
     # randomly sample US and UK words until have enough
-    NUM_WORDS = 50
     words_us = []
     words_uk = []
+
+    t0 = time()
     for i in random.sample(range(N), N):
+        if time() - t0 > TIMEOUT_AFTER_SECONDS:
+            print("TIMEOUT")
+            break
         word = words_all[i]
         # skip plural words
         if word[-1] == 's':
@@ -112,25 +106,4 @@ if __name__ == '__main__':
                 words_uk.append(data)
         if len(words_uk) == NUM_WORDS and len(words_us) == NUM_WORDS:
             break
-
-    # # write words to file
-    # import pickle
-    # with open('parsed_words_us.pickle', 'wb') as fp:
-    #     pickle.dump(words_us, fp)
-    # with open('parsed_words_uk.pickle', 'wb') as fp:
-    #     pickle.dump(words_uk, fp)
-
-    # # ingest words in mongo
-    # mongo = init_mongo()
-    # words = mongo.spellingo.words_us
-    # words.delete_many({'word': {'$in': words}})
-    # result = words.insert_many(data)
-    # print(result.inserted_ids)
-
-    # words = mongo.spellingo.words_uk
-    # words.delete_many({'word': {'$in': words}})
-    # result = words.insert_many(data)
-    # print(result.inserted_ids)
-
-
 
