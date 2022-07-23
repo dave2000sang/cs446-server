@@ -11,7 +11,7 @@ OXFORD_APP_ID = os.getenv('OXFORD_APP_ID')
 OXFORD_SECRET = os.getenv('OXFORD_SECRET')
 
 TIMEOUT_AFTER_SECONDS = 1000
-WORD_FILE = 'hard_words.txt' #'words.txt'
+WORD_FILE = 'words.txt'
 NUM_WORDS = 500
 
 # :param language <str> en-us or en-gb
