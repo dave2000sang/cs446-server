@@ -26,7 +26,8 @@ def ingest_into_mongo():
         result = category_collection.insert_many(data)
         print(f"inserted {len(result.inserted_ids)} new words")
         if len(result.inserted_ids) > 0:
-            mongo.categories.categories_list.update_one({'category': category}, {'$set': {'category': category}}, upsert=True)
+            category_no_locale = category.split("_")[0]
+            mongo.categories.categories_list.update_one({'category': category_no_locale}, {'$set': {'category': category_no_locale}}, upsert=True)
 
 if __name__ == '__main__':
     ingest_into_mongo()

@@ -66,11 +66,13 @@ def words():
       cursor = words.aggregate([
         {"$sample": { "size": limit } } 
       ])
-
   else:
     # return categories
-    if category in categories_db.list_collection_names():
-      words = categories_db[category]
+    # check if category exists
+    category_exists = list(categories_db.categories_list.find({'category': category}))
+    if category_exists:
+      category_w_lang = category + '_us' if locale == 'us' else category + '_uk'
+      words = categories_db[category_w_lang]
     else:
       return "Bad category", 400
     # don't filter difficulty if category specified

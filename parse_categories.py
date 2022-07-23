@@ -16,7 +16,7 @@ OXFORD_APP_ID = os.getenv('OXFORD_APP_ID')
 OXFORD_SECRET = os.getenv('OXFORD_SECRET')
 TARGET_NUM_WORDS = 100
 
-CATEGORIES_TO_SKIP = ['astronomy', 'law', 'medicine']
+CATEGORIES_TO_SKIP = ['animals', 'astronomy']
 
 # :param language <str> en-us or en-gb
 def fetch_word(word, language='en-us'):
@@ -82,24 +82,28 @@ if __name__ == '__main__':
             for line in f:
                 words_all.append(str(line.strip()))
         N = len(words_all)
-        words_lst = []
+        num_words = 0
         for i in random.sample(range(N), N):
             word = words_all[i]
             # skip plural words
             if word[-1] == 's':
                 continue
-            sleep(0.1)
-            # Fetch data from API
-            if len(words_lst) < TARGET_NUM_WORDS:
-                data = fetch_word(word, 'en-us')
-                # skip bad words
-                if not data or data == 404:
-                    continue
-                if data:
-                    print("GOT US WORD", data)
-                    # write to file
-                    with open(f'parsed_categories/{category}.txt', 'a', encoding="utf-8") as f:
-                        f.write("%s\n" % data)
-                    words_lst.append(data)
-            if len(words_lst) >= TARGET_NUM_WORDS:
+            # US
+            if num_words >= TARGET_NUM_WORDS:
                 break
+            data = fetch_word(word, 'en-us')
+            if not data or data == 404:
+                continue
+            if data:
+                num_words += 1
+                print("GOT US WORD", data)
+                with open(f'parsed_categories/{category}_us.txt', 'a', encoding="utf-8") as f:
+                    f.write("%s\n" % data)
+            # UK
+            data = fetch_word(word, 'en-gb')
+            if not data or data == 404:
+                continue
+            if data:
+                print("GOT UK WORD", data)
+                with open(f'parsed_categories/{category}_uk.txt', 'a', encoding="utf-8") as f:
+                    f.write("%s\n" % data)
